@@ -1,5 +1,4 @@
 import re
-import json 
 
 abbrevs = {
     "isn\'t":"is not",
@@ -24,9 +23,6 @@ abbrevs = {
     'what\'s':'what is',
     'ma\'am':'madam'
 }
-def lowercase(match):
-    print(match)
-    return match.group(3).lower()
 
 cleaningchars = ["‘","’",":","—","-","\"","'",";","*","*","","(",")","…","/","–","•","@","=","|","“","\u200d","+","\u200c"]
 cleaned_text = []
@@ -66,7 +62,7 @@ for line in text:
     cleaned_line = re.sub(r'\. +\. +\. +\.?', '...', cleaned_line)
 
     # removing unnecessary special characters
-    cleaned_line = re.sub(r'[^a-z0-9 @$,.;?:\'\"\-!]', '',cleaned_line)
+    cleaned_line = re.sub(r'[^a-z0-9 @$,.!?:;\'\"\-]', '',cleaned_line)
 
     cleaned_text.append(cleaned_line)
 
