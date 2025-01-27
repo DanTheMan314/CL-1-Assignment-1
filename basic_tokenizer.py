@@ -22,7 +22,7 @@ for line in text:
     for key in contracts.keys(): # switching from contraction to placeholder
         if key in de_line:
             de_line = de_line.replace(key,contracts[key])
-    de_line = re.sub(r'[.!?] ','<sep>',de_line)
+    de_line = re.sub(r'[.!?] ','<sep>',de_line) # to make sentence separaters more obvious
     newlines = de_line.split('<sep>')
     for newline in newlines:
         if newline != '':
@@ -34,13 +34,12 @@ for line in tokenized:
     tokens = line.split(" ")
     newtokens = []
     for token in tokens:
-        newtoken = re.sub(r'[^a-z0-9.\-<>]', '',token)
+        newtoken = re.sub(r'[^a-z0-9.\-<>\':,]', '',token) # for all other special cha
         for key in expands.keys(): # switching from placeholder to contraction
             if key in newtoken:
-                print(newtoken)
                 newtoken = newtoken.replace(key,expands[key])
-                print(newtoken)
-        newtokens.append(newtoken)
+        if newtoken!='':
+            newtokens.append(newtoken)
     tokenlist.append(newtokens)
     
 file = open("tokenized.txt","w")

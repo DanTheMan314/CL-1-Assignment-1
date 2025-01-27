@@ -24,7 +24,6 @@ abbrevs = {
     'ma\'am':'madam'
 }
 
-cleaningchars = ["‘","’",":","—","-","\"","'",";","*","*","","(",")","…","/","–","•","@","=","|","“","\u200d","+","\u200c"]
 cleaned_text = []
 readfile = open("18_text.txt","r",encoding="utf8")
 text = readfile.readlines()
@@ -61,6 +60,12 @@ for line in text:
     # ellipsis
     cleaned_line = re.sub(r'\. +\. +\. +\.?', '...', cleaned_line)
     cleaned_line = re.sub(r'--', '...', cleaned_line)
+
+    # removing colon from everywhere except references/timestamps
+    cleaned_line = re.sub(r':[ \n]', ' ', cleaned_line) # for non numbers/timestamps
+
+    # removing comma from everywhere except numbers
+    cleaned_line = re.sub(r',[ \n]', ' ', cleaned_line)
 
     # removing unnecessary special characters
     cleaned_line = re.sub(r'[^a-z0-9 @$,.!?:;\'\"\-]', '',cleaned_line)
