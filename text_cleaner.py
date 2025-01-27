@@ -60,15 +60,14 @@ for line in text:
         cleaned_line = set[0]+'\"'+set[1] """
     # ellipsis
     cleaned_line = re.sub(r'\. +\. +\. +\.?', '...', cleaned_line)
+    cleaned_line = re.sub(r'--', '...', cleaned_line)
 
     # removing unnecessary special characters
     cleaned_line = re.sub(r'[^a-z0-9 @$,.!?:;\'\"\-]', '',cleaned_line)
 
     cleaned_text.append(cleaned_line)
 
-
-
-#""
+# saving to cleaned_text
 writefile = open("cleaned_text.txt","w")
 for line in cleaned_text:
-    writefile.write(line)
+    writefile.write(line+'\n')
