@@ -34,18 +34,45 @@ readfile = open("18_text.txt","r",encoding="utf8")
 text = readfile.readlines()
 
 for line in text:
-    line1 = re.sub(r'  +', ' ', line)
-    line2 = re.sub(r'^ *', '', line1)
-    line3 = re.sub(r' *$', '', line2)
-    for l in re.findall(r'[A-Z]', line3):
-        line3 = line3.replace(l,l.lower())
+    # leading, trailing and in between whitespace
+    cleaned_line = re.sub(r'  +', ' ', line)
+    cleaned_line = re.sub(r'^ *', '', cleaned_line)
+    cleaned_line = re.sub(r' *$', '', cleaned_line)
+    # converting uppercase characters to lowercase
+    for l in re.findall(r'[A-Z]', cleaned_line):
+        cleaned_line = cleaned_line.replace(l,l.lower())
+    # replacing basic contractions
     for key in abbrevs.keys():
-        if key in line3:
-            line3 = line3.replace(key,abbrevs[key])
-    line4 = re.sub(r'[^a-z0-9 ,.;?:\'\-!\n]', '',line3)
-    cleaned_text.append(line4)
+        if key in cleaned_line:
+            cleaned_line = cleaned_line.replace(key,abbrevs[key])
 
-#"<.*?>"
+    # HTML Tags
+    cleaned_line = re.sub(r'<.*?>', '', cleaned_line)
+    # URLs
+    cleaned_line = re.sub(r'[a-z]+(\.[a-z]+)+','<URL>',cleaned_line)
+    # emails
+    cleaned_line = re.sub(r'[a-z]+(\.[a-z]+)*@[a-z]+(\.[a-z]+)+', '<MAIL>', cleaned_line)
+    # hashtags
+    cleaned_line = re.sub(r'#[a-z]+','<HASHTAG>',cleaned_line)
+    # mentions
+    cleaned_line = re.sub(r'@[a-z]+', '<MENTION>', cleaned_line)
+
+    # quotation marks
+    cleaned_line = re.sub(r"\'\'",'"',cleaned_line)
+    """ for l in re.findall(r'\'.*\'', cleaned_line):
+        set = cleaned_line.split(l,1)
+        cleaned_line = set[0]+'\"'+set[1] """
+    # ellipsis
+    cleaned_line = re.sub(r'\. +\. +\. +\.?', '...', cleaned_line)
+
+    # removing unnecessary special characters
+    cleaned_line = re.sub(r'[^a-z0-9 @$,.;?:\'\"\-!]', '',cleaned_line)
+
+    cleaned_text.append(cleaned_line)
+
+
+
+#""
 writefile = open("cleaned_text.txt","w")
 for line in cleaned_text:
     writefile.write(line)
